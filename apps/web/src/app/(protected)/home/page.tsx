@@ -1,12 +1,16 @@
-import { RouteGuard } from '@/components/auth/RouteGuard'
+import { Suspense } from 'react'
+import { FeedContent } from '@/components/listings/FeedContent'
 
 export default function HomePage() {
   return (
-    <RouteGuard>
-      <div className="flex min-h-screen flex-col items-center justify-center bg-beige-100">
-        <span className="font-serif text-2xl text-sage-600">EverAfterExchange</span>
-        <p className="mt-3 text-sm text-stone-500">Marketplace feed — Phase 3</p>
-      </div>
-    </RouteGuard>
+    <Suspense
+      fallback={
+        <div className="flex justify-center py-24">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-sage-500 border-t-transparent" />
+        </div>
+      }
+    >
+      <FeedContent />
+    </Suspense>
   )
 }

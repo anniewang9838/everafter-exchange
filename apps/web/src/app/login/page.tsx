@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { signIn } from '@/services/auth.service'
+import { signIn, getMe } from '@/services/auth.service'
+import { useAuthStore } from '@/store/auth.store'
 
 const schema = z.object({
   email:    z.string().email('Enter a valid email'),
@@ -16,6 +17,7 @@ type FormValues = z.infer<typeof schema>
 
 export default function LoginPage() {
   const router = useRouter()
+  const { setUser } = useAuthStore()
   const [serverError, setServerError] = useState<string | null>(null)
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
@@ -25,9 +27,13 @@ export default function LoginPage() {
     setServerError(null)
     try {
       await signIn(values.email, values.password)
-      // AuthProvider will fetch /auth/me and populate the store
-      // RouteGuard on /home handles any onboarding redirects
-      router.push('/home')
+      const user = await getMe()
+      setUser(user)
+      router.replace(
+        user.onboardingComplete
+          ? '/home'
+          : user.role === 'seller' ? '/onboarding/seller' : '/onboarding/buyer'
+      )
     } catch {
       setServerError('Invalid email or password')
     }

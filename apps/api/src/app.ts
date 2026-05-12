@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import authRouter from './routes/auth'
+import listingsRouter from './routes/listings'
 
 const app = express()
 const PORT = process.env.PORT ?? 4000
@@ -17,13 +18,12 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
-app.use('/auth', authRouter)
+app.use('/auth',     authRouter)
+app.use('/listings', listingsRouter)
 
-// Placeholder — future phases will add these
-// app.use('/listings', listingsRouter)
-// app.use('/offers',   offersRouter)
-// app.use('/orders',   ordersRouter)
-// app.use('/messages', messagesRouter)
+// app.use('/offers',   offersRouter)   — Phase 4
+// app.use('/orders',   ordersRouter)   — Phase 4
+// app.use('/messages', messagesRouter) — Phase 4
 
 app.use((_req, res) => {
   res.status(404).json({
