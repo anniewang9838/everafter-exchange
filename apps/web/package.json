@@ -1,0 +1,38 @@
+{
+  "name": "@everafter/web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@everafter/types": "*",
+    "@hookform/resolvers": "^3.9.0",
+    "@tanstack/react-query": "^5.50.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "firebase": "^11.2.0",
+    "lucide-react": "^0.400.0",
+    "next": "^15.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "tailwind-merge": "^2.4.0",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.3.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^3.4.6",
+    "typescript": "^5.5.3"
+  }
+}
