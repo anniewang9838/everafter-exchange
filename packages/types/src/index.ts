@@ -14,6 +14,7 @@ export type VenueStyle =
 export interface User {
   id: string
   firebaseUid: string
+  username: string
   name: string
   email: string
   role: UserRole
@@ -31,8 +32,11 @@ export interface User {
   createdAt: string
 }
 
+// Minimal subset stored in Zustand — only what routing decisions (RouteGuard 
+// and nav bar) need.
 export interface AuthUser {
   id: string
+  username: string
   name: string
   email: string
   role: UserRole
@@ -76,7 +80,7 @@ export interface Listing {
   images: ListingImage[]
   createdAt: string
   updatedAt: string
-  seller?: Pick<User, 'id' | 'name' | 'isVerified'>
+  seller?: Pick<User, 'id' | 'username' | 'name' | 'isVerified'>
 }
 
 // ── Offers ────────────────────────────────────────────────────────────────────
@@ -93,8 +97,8 @@ export interface Offer {
   createdAt: string
   updatedAt: string
   listing?: Pick<Listing, 'id' | 'title' | 'price' | 'images'>
-  buyer?: Pick<User, 'id' | 'name'>
-  seller?: Pick<User, 'id' | 'name'>
+  buyer?: Pick<User, 'id' | 'username' | 'name'>
+  seller?: Pick<User, 'id' | 'username' | 'name'>
 }
 
 // ── Orders ────────────────────────────────────────────────────────────────────
@@ -114,8 +118,8 @@ export interface Order {
   createdAt: string
   updatedAt: string
   listing?: Pick<Listing, 'id' | 'title' | 'images' | 'price'>
-  buyer?: Pick<User, 'id' | 'name'>
-  seller?: Pick<User, 'id' | 'name'>
+  buyer?: Pick<User, 'id' | 'username' | 'name'>
+  seller?: Pick<User, 'id' | 'username' | 'name'>
 }
 
 // ── Messages ──────────────────────────────────────────────────────────────────
@@ -128,12 +132,12 @@ export interface Message {
   receiverId: string
   content: string
   createdAt: string
-  sender?: Pick<User, 'id' | 'name'>
+  sender?: Pick<User, 'id' | 'username' | 'name'>
 }
 
 export interface Conversation {
   id: string
-  otherUser: Pick<User, 'id' | 'name' | 'isVerified'>
+  otherUser: Pick<User, 'id' | 'username' | 'name' | 'isVerified'>
   listing: Pick<Listing, 'id' | 'title' | 'images'>
   lastMessage: string
   lastMessageAt: string

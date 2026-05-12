@@ -15,6 +15,7 @@ CREATE TYPE order_status      AS ENUM ('pending', 'completed', 'cancelled');
 CREATE TABLE users (
   id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   firebase_uid         TEXT NOT NULL UNIQUE,
+  username             TEXT NOT NULL UNIQUE,
   name                 TEXT NOT NULL,
   email                TEXT NOT NULL UNIQUE,
   role                 user_role NOT NULL DEFAULT 'buyer',
@@ -32,6 +33,9 @@ CREATE TABLE users (
   created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Case-insensitive username uniqueness
+CREATE UNIQUE INDEX idx_users_username_lower ON users(lower(username));
 
 -- ── Listings ──────────────────────────────────────────────────────────────────
 
@@ -58,9 +62,9 @@ CREATE TABLE listing_images (
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_listings_seller_id       ON listings(seller_id);
-CREATE INDEX idx_listings_status          ON listings(status);
-CREATE INDEX idx_listing_images_listing   ON listing_images(listing_id);
+CREATE INDEX idx_listings_seller_id     ON listings(seller_id);
+CREATE INDEX idx_listings_status        ON listings(status);
+CREATE INDEX idx_listing_images_listing ON listing_images(listing_id);
 
 -- ── Offers ────────────────────────────────────────────────────────────────────
 
@@ -79,9 +83,9 @@ CREATE TABLE offers (
 CREATE UNIQUE INDEX idx_offers_one_accepted
   ON offers(listing_id) WHERE status = 'accepted';
 
-CREATE INDEX idx_offers_listing  ON offers(listing_id);
-CREATE INDEX idx_offers_buyer    ON offers(buyer_id);
-CREATE INDEX idx_offers_seller   ON offers(seller_id);
+CREATE INDEX idx_offers_listing ON offers(listing_id);
+CREATE INDEX idx_offers_buyer   ON offers(buyer_id);
+CREATE INDEX idx_offers_seller  ON offers(seller_id);
 
 -- ── Orders ────────────────────────────────────────────────────────────────────
 
@@ -110,12 +114,16 @@ CREATE INDEX idx_orders_seller ON orders(seller_id);
 
 CREATE TABLE messages (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id    UUID REFERENCES orders(id) ON DELETE SET NULL,
-  listing_id  UUID REFERENCES listings(id) ON DELETE SET NULL,
+  order_id    UUID REFERENCES orders(id) ON DELETE SET NULL,    -- nullable: pre-order chat ready for v2
+  listing_id  UUID REFERENCES listings(id) ON DELETE SET NULL,  -- fallback context
   sender_id   UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   content     TEXT NOT NULL,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  -- Every message must be tied to either an order or a listing
+  CONSTRAINT chk_messages_has_context
+    CHECK (order_id IS NOT NULL OR listing_id IS NOT NULL)
 );
 
 CREATE INDEX idx_messages_order   ON messages(order_id);

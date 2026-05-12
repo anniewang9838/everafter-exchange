@@ -9,12 +9,20 @@ import { firebaseAuth } from '@/lib/auth/firebase'
 import { apiClient } from '@/lib/api/client'
 import type { AuthUser } from '@everafter/types'
 
-export async function signUp(name: string, email: string, password: string): Promise<AuthUser> {
+export async function signUp(
+  username: string,
+  name: string,
+  email: string,
+  password: string,
+  intent: 'buy' | 'sell',
+): Promise<AuthUser> {
   const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password)
   const user = await apiClient.post<AuthUser>('/auth/signup', {
+    username,
     name,
     email,
     firebaseUid: credential.user.uid,
+    role: intent === 'sell' ? 'seller' : 'buyer',
   })
   return user
 }

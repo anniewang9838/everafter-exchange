@@ -16,7 +16,6 @@ type FormValues = z.infer<typeof schema>
 
 export default function LoginPage() {
   const router = useRouter()
-  const [intent, setIntent] = useState<'buy' | 'sell'>('buy')
   const [serverError, setServerError] = useState<string | null>(null)
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
@@ -26,6 +25,8 @@ export default function LoginPage() {
     setServerError(null)
     try {
       await signIn(values.email, values.password)
+      // AuthProvider will fetch /auth/me and populate the store
+      // RouteGuard on /home handles any onboarding redirects
       router.push('/home')
     } catch {
       setServerError('Invalid email or password')
@@ -38,17 +39,6 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <span className="font-serif text-2xl text-sage-600">EverAfterExchange</span>
           <p className="mt-2 text-sm text-stone-500">Welcome back</p>
-        </div>
-
-        <div className="mb-6 flex rounded-lg border border-taupe-300 p-1">
-          {(['buy', 'sell'] as const).map((i) => (
-            <button key={i} type="button" onClick={() => setIntent(i)}
-              className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
-                intent === i ? 'bg-sage-500 text-white' : 'text-stone-500 hover:text-stone-700'
-              }`}>
-              {i === 'buy' ? "I'm here to buy" : "I'm here to sell"}
-            </button>
-          ))}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -64,7 +54,9 @@ export default function LoginPage() {
             {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
           </div>
 
-          {serverError && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">{serverError}</p>}
+          {serverError && (
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">{serverError}</p>
+          )}
 
           <button type="submit" disabled={isSubmitting} className="btn-primary mt-2 w-full py-3">
             {isSubmitting ? 'Logging in…' : 'Log in'}
@@ -73,7 +65,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-xs text-stone-500">
           Don't have an account?{' '}
-          <Link href={`/signup?intent=${intent}`} className="font-medium text-sage-600 hover:underline">Sign up</Link>
+          <Link href="/signup" className="font-medium text-sage-600 hover:underline">Sign up</Link>
         </p>
       </div>
     </div>
