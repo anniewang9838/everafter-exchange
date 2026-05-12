@@ -13,7 +13,6 @@ export type VenueStyle =
 
 export interface User {
   id: string
-  firebaseUid: string
   username: string
   name: string
   email: string
@@ -64,6 +63,7 @@ export interface ListingImage {
   listingId: string
   imageUrl: string
   displayOrder: number
+  createdAt: string
 }
 
 export interface Listing {

@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express'
 import { z } from 'zod'
-import { v4 as uuidv4 } from 'uuid'
 import { auth } from '../lib/firebase'
 import pool from '../db/client'
 import { authenticate } from '../middleware/authenticate'
@@ -66,12 +65,11 @@ router.post('/signup', validate(signupSchema), async (req: Request, res: Respons
       return
     }
 
-    const id = uuidv4()
     const result = await pool.query(
-      `INSERT INTO users (id, firebase_uid, username, name, email, role)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO users (firebase_uid, username, name, email, role)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING id, username, name, email, role, onboarding_complete, is_verified`,
-      [id, firebaseUid, username.toLowerCase(), name, email, role]
+      [firebaseUid, username.toLowerCase(), name, email, role]
     )
 
     const u = result.rows[0]
