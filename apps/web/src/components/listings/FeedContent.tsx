@@ -73,7 +73,10 @@ export function FeedContent() {
             type="search"
             placeholder="Search wedding décor…"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              setSearchInput(e.target.value)
+              if (!e.target.value.trim()) setParam('search', null)
+            }}
             className="input w-full pl-9"
           />
         </form>
@@ -115,6 +118,14 @@ export function FeedContent() {
                 {style.label}
               </button>
             ))}
+            {activeStyles.length > 0 && (
+              <button
+                onClick={() => setParam('venueStyle', null)}
+                className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium text-stone-400 transition-colors hover:text-red-400"
+              >
+                Clear
+              </button>
+            )}
           </div>
         </div>
       </header>
