@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
 
-const CATEGORIES = [
+export const CATEGORIES = [
   { value: 'centerpieces',  label: 'Centerpieces' },
   { value: 'table_runners', label: 'Table Runners' },
   { value: 'candles',       label: 'Candles' },
@@ -15,7 +15,7 @@ const CATEGORIES = [
   { value: 'other',         label: 'Other' },
 ]
 
-const VENUE_STYLES = [
+export const VENUE_STYLES = [
   { value: 'modern',   label: 'Modern' },
   { value: 'rustic',   label: 'Rustic' },
   { value: 'garden',   label: 'Garden' },
@@ -25,7 +25,7 @@ const VENUE_STYLES = [
   { value: 'other',    label: 'Other' },
 ]
 
-const CONDITIONS = [
+export const CONDITIONS = [
   { value: 'like_new',  label: 'Like New' },
   { value: 'excellent', label: 'Excellent' },
   { value: 'good',      label: 'Good' },

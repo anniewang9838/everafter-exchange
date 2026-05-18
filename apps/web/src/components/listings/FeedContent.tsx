@@ -6,29 +6,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Search } from 'lucide-react'
 import { getListings } from '@/services/listings.service'
 import { ListingCard } from './ListingCard'
+import { CATEGORIES as BASE_CATEGORIES, VENUE_STYLES } from './ListingFilters'
 
-const CATEGORIES = [
-  { value: '',             label: 'All' },
-  { value: 'centerpieces', label: 'Centerpieces' },
-  { value: 'table_runners',label: 'Table Runners' },
-  { value: 'candles',      label: 'Candles' },
-  { value: 'signage',      label: 'Signage' },
-  { value: 'arch_arbor',   label: 'Arch & Arbor' },
-  { value: 'linens',       label: 'Linens' },
-  { value: 'lighting',     label: 'Lighting' },
-  { value: 'floral',       label: 'Floral' },
-  { value: 'other',        label: 'Other' },
-]
-
-const VENUE_STYLES = [
-  { value: 'modern',   label: 'Modern' },
-  { value: 'rustic',   label: 'Rustic' },
-  { value: 'garden',   label: 'Garden' },
-  { value: 'vintage',  label: 'Vintage' },
-  { value: 'boho',     label: 'Boho' },
-  { value: 'ballroom', label: 'Ballroom' },
-  { value: 'other',    label: 'Other' },
-]
+const CATEGORIES = [{ value: '', label: 'All' }, ...BASE_CATEGORIES]
 
 export function FeedContent() {
   const router = useRouter()

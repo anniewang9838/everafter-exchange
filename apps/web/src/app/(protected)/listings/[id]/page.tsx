@@ -64,7 +64,7 @@ function DetailPage() {
   return (
     <>
       <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-taupe-200 bg-white px-4 py-3">
-        <Link href="/home" className="text-sm text-stone-400 hover:text-stone-700">←</Link>
+        <button onClick={() => router.back()} className="text-sm text-stone-400 hover:text-stone-700">←</button>
         <h1 className="font-serif text-lg text-stone-800 line-clamp-1">{listing.title}</h1>
       </header>
 

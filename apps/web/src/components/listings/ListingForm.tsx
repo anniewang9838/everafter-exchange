@@ -4,35 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { ImageUploader } from './ImageUploader'
-
-const CATEGORIES = [
-  { value: 'centerpieces',  label: 'Centerpieces' },
-  { value: 'table_runners', label: 'Table Runners' },
-  { value: 'candles',       label: 'Candles' },
-  { value: 'signage',       label: 'Signage' },
-  { value: 'arch_arbor',    label: 'Arch & Arbor' },
-  { value: 'linens',        label: 'Linens' },
-  { value: 'lighting',      label: 'Lighting' },
-  { value: 'floral',        label: 'Floral' },
-  { value: 'other',         label: 'Other' },
-] as const
-
-const CONDITIONS = [
-  { value: 'like_new',  label: 'Like New' },
-  { value: 'excellent', label: 'Excellent' },
-  { value: 'good',      label: 'Good' },
-  { value: 'fair',      label: 'Fair' },
-] as const
-
-const VENUE_STYLES = [
-  { value: 'modern',   label: 'Modern' },
-  { value: 'rustic',   label: 'Rustic' },
-  { value: 'garden',   label: 'Garden' },
-  { value: 'vintage',  label: 'Vintage' },
-  { value: 'boho',     label: 'Boho' },
-  { value: 'ballroom', label: 'Ballroom' },
-  { value: 'other',    label: 'Other' },
-] as const
+import { CATEGORIES, CONDITIONS, VENUE_STYLES } from './ListingFilters'
 
 const schema = z.object({
   imageUrls: z.array(z.string()).min(1, 'At least one photo is required'),

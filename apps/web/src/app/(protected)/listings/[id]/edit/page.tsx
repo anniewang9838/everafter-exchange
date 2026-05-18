@@ -38,7 +38,7 @@ export default function EditListingPage() {
     })
     queryClient.invalidateQueries({ queryKey: ['listing', id] })
     queryClient.invalidateQueries({ queryKey: ['listings'] })
-    router.push(`/listings/${id}`)
+    router.replace(`/listings/${id}`)
   }
 
   if (isLoading) {
@@ -72,7 +72,7 @@ export default function EditListingPage() {
   return (
     <>
       <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-taupe-200 bg-white px-4 py-3">
-        <Link href={`/listings/${id}`} className="text-sm text-stone-400 hover:text-stone-700">←</Link>
+        <button onClick={() => router.back()} className="text-sm text-stone-400 hover:text-stone-700">←</button>
         <h1 className="font-serif text-lg text-stone-800">Edit Listing</h1>
       </header>
 
