@@ -77,7 +77,7 @@ function MyListingsContent() {
 
       {data?.items.length === 0 && (
         <div className="flex flex-col items-center py-24 text-center">
-          <p className="text-stone-500">You haven't listed anything yet.</p>
+          <p className="text-stone-500">You haven&apos;t listed anything yet.</p>
           <Link href="/listings/new" className="btn-primary mt-4">Create your first listing</Link>
         </div>
       )}

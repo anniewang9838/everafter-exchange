@@ -2,16 +2,14 @@ import { Request, Response, NextFunction } from 'express'
 import { auth } from '../lib/firebase'
 import pool from '../db/client'
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string
-        firebaseUid: string
-        email: string
-        role: string
-        onboardingComplete: boolean
-      }
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: {
+      id: string
+      firebaseUid: string
+      email: string
+      role: string
+      onboardingComplete: boolean
     }
   }
 }
