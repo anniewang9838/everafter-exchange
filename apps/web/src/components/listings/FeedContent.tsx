@@ -6,19 +6,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Search } from 'lucide-react'
 import { getListings } from '@/services/listings.service'
 import { ListingCard } from './ListingCard'
+import { CATEGORIES as BASE_CATEGORIES, VENUE_STYLES } from './ListingFilters'
 
-const CATEGORIES = [
-  { value: '',             label: 'All' },
-  { value: 'centerpieces', label: 'Centerpieces' },
-  { value: 'table_runners',label: 'Table Runners' },
-  { value: 'candles',      label: 'Candles' },
-  { value: 'signage',      label: 'Signage' },
-  { value: 'arch_arbor',   label: 'Arch & Arbor' },
-  { value: 'linens',       label: 'Linens' },
-  { value: 'lighting',     label: 'Lighting' },
-  { value: 'floral',       label: 'Floral' },
-  { value: 'other',        label: 'Other' },
-]
+const CATEGORIES = [{ value: '', label: 'All' }, ...BASE_CATEGORIES]
 
 export function FeedContent() {
   const router = useRouter()
@@ -59,11 +49,19 @@ export function FeedContent() {
     router.push(`/home?${params.toString()}`)
   }
 
-  const activeCategory = searchParams.get('category') ?? ''
+  const activeCategory  = searchParams.get('category') ?? ''
+  const activeStyles    = (searchParams.get('venueStyle') ?? '').split(',').filter(Boolean)
+
+  function toggleStyle(value: string) {
+    const next = activeStyles.includes(value)
+      ? activeStyles.filter(s => s !== value)
+      : [...activeStyles, value]
+    setParam('venueStyle', next.length ? next.join(',') : null)
+  }
 
   return (
     <div>
-      {/* Sticky header: logo + search + category chips */}
+      {/* Sticky header: logo + search + category chips + style chips */}
       <header className="sticky top-0 z-40 border-b border-taupe-200 bg-beige-100 px-4 pb-3 pt-4">
         <div className="mb-3 flex items-center justify-between">
           <span className="font-serif text-xl text-sage-600">EverAfterExchange</span>
@@ -75,26 +73,60 @@ export function FeedContent() {
             type="search"
             placeholder="Search wedding décor…"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              setSearchInput(e.target.value)
+              if (!e.target.value.trim()) setParam('search', null)
+            }}
             className="input w-full pl-9"
           />
         </form>
 
-        {/* Category chip strip */}
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat.value}
-              onClick={() => setParam('category', cat.value || null)}
-              className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                activeCategory === cat.value
-                  ? 'bg-sage-600 text-white'
-                  : 'bg-white text-stone-600 shadow-sm hover:bg-sage-50'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Item type chip strip */}
+        <div className="mt-3 flex items-center gap-2">
+          <span className="w-8 shrink-0 text-xs text-stone-400">Item</span>
+          <div className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.value}
+                onClick={() => setParam('category', cat.value || null)}
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                  activeCategory === cat.value
+                    ? 'bg-sage-600 text-white'
+                    : 'bg-white text-stone-600 shadow-sm hover:bg-sage-50'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Style chip strip */}
+        <div className="mt-2 flex items-center gap-2">
+          <span className="w-8 shrink-0 text-xs text-stone-400">Style</span>
+          <div className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {VENUE_STYLES.map(style => (
+              <button
+                key={style.value}
+                onClick={() => toggleStyle(style.value)}
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                  activeStyles.includes(style.value)
+                    ? 'bg-sage-600 text-white'
+                    : 'bg-white text-stone-600 shadow-sm hover:bg-sage-50'
+                }`}
+              >
+                {style.label}
+              </button>
+            ))}
+            {activeStyles.length > 0 && (
+              <button
+                onClick={() => setParam('venueStyle', null)}
+                className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium text-stone-400 transition-colors hover:text-red-400"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
       </header>
 

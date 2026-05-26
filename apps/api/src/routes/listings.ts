@@ -28,7 +28,7 @@ const createListingSchema = z.object({
   condition:            z.enum(LISTING_CONDITIONS),
   category:             z.enum(LISTING_CATEGORIES),
   venueStyle:           z.enum(VENUE_STYLES).optional().nullable(),
-  imageUrls:            z.array(z.string().url()).min(1).max(5),
+  imageUrls:            z.array(z.string().min(1)).min(1).max(5),
 })
 
 const updateListingSchema = z.object({
@@ -39,7 +39,7 @@ const updateListingSchema = z.object({
   condition:            z.enum(LISTING_CONDITIONS).optional(),
   category:             z.enum(LISTING_CATEGORIES).optional(),
   venueStyle:           z.enum(VENUE_STYLES).optional().nullable(),
-  imageUrls:            z.array(z.string().url()).min(1).max(5).optional(),
+  imageUrls:            z.array(z.string().min(1)).min(1).max(5).optional(),
   status:               z.enum(['active', 'inactive']).optional(),
 })
 
@@ -47,7 +47,7 @@ const feedQuerySchema = z.object({
   page:       z.coerce.number().int().positive().default(1),
   limit:      z.coerce.number().int().min(1).max(50).default(20),
   category:   z.enum(LISTING_CATEGORIES).optional(),
-  venueStyle: z.enum(VENUE_STYLES).optional(),
+  venueStyle: z.string().optional(),
   condition:  z.enum(LISTING_CONDITIONS).optional(),
   minPrice:   z.coerce.number().positive().optional(),
   maxPrice:   z.coerce.number().positive().optional(),
@@ -227,8 +227,11 @@ router.get('/', authenticate, validate(feedQuerySchema, 'query'), async (req: Re
   const params: any[] = []
   let p = 1
 
-  if (category)   { wheres.push(`l.category   = $${p}::listing_category`); params.push(category);   p++ }
-  if (venueStyle) { wheres.push(`l.venue_style = $${p}::venue_style`);      params.push(venueStyle); p++ }
+  const venueStyles = venueStyle ? venueStyle.split(',').filter(Boolean) : []
+
+  if (category)          { wheres.push(`l.category    = $${p}::listing_category`);      params.push(category);   p++ }
+  if (venueStyles.length === 1) { wheres.push(`l.venue_style = $${p}::venue_style`);    params.push(venueStyles[0]); p++ }
+  if (venueStyles.length > 1)   { wheres.push(`l.venue_style = ANY($${p}::venue_style[])`); params.push(venueStyles); p++ }
   if (condition)  { wheres.push(`l.condition  = $${p}::listing_condition`); params.push(condition);  p++ }
   if (minPrice)   { wheres.push(`l.price >= $${p}`);                        params.push(minPrice);   p++ }
   if (maxPrice)   { wheres.push(`l.price <= $${p}`);                        params.push(maxPrice);   p++ }
