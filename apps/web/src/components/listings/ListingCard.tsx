@@ -20,22 +20,36 @@ interface Props {
   actions?: React.ReactNode
 }
 
+const STATUS_OVERLAY: Partial<Record<string, string>> = {
+  reserved: 'Reserved',
+  sold:     'Sold',
+  inactive: 'Inactive',
+}
+
 export function ListingCard({ listing, actions }: Props) {
   const firstImage = listing.images[0]?.imageUrl
+  const statusLabel = STATUS_OVERLAY[listing.status]
 
   return (
     <div className="card overflow-hidden">
       <Link href={`/listings/${listing.id}`} className="group block">
-        <div className="aspect-[4/3] overflow-hidden bg-beige-200">
+        <div className="relative aspect-[4/3] overflow-hidden bg-beige-200">
           {firstImage ? (
             <img
               src={firstImage}
               alt={listing.title}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${statusLabel ? 'opacity-60' : ''}`}
             />
           ) : (
             <div className="flex h-full items-center justify-center text-xs text-stone-400">
               No photo
+            </div>
+          )}
+          {statusLabel && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-stone-600 shadow-sm">
+                {statusLabel}
+              </span>
             </div>
           )}
         </div>

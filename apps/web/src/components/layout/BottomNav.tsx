@@ -21,7 +21,7 @@ function isTabActive(tabHref: string, pathname: string): boolean {
     )
   }
   if (tabHref === '/inbox') {
-    return pathname.startsWith('/inbox') || pathname.startsWith('/messages')
+    return pathname.startsWith('/inbox') || pathname.startsWith('/messages') || pathname.startsWith('/offers/')
   }
   if (tabHref === '/profile') {
     return pathname.startsWith('/profile') || pathname.startsWith('/settings')

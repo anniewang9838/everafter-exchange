@@ -3,12 +3,21 @@ import express from 'express'
 import cors from 'cors'
 import authRouter from './routes/auth'
 import listingsRouter from './routes/listings'
+import offersRouter from './routes/offers'
 
 const app = express()
 const PORT = process.env.PORT ?? 4000
 
+const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:3000')
+  .split(',')
+  .map(o => o.trim())
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN ?? 'http://localhost:3000',
+  origin: (origin, cb) => {
+    // Allow requests with no origin (e.g. curl, mobile apps)
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true)
+    cb(new Error(`CORS: origin ${origin} not allowed`))
+  },
   credentials: true,
 }))
 app.use(express.json({ limit: '5mb' }))
@@ -20,8 +29,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/auth',     authRouter)
 app.use('/listings', listingsRouter)
-
-// app.use('/offers',   offersRouter)   — Phase 4
+app.use('/offers',   offersRouter)
 // app.use('/orders',   ordersRouter)   — Phase 4
 // app.use('/messages', messagesRouter) — Phase 4
 
