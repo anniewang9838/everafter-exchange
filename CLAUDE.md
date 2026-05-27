@@ -51,12 +51,13 @@ There are no automated tests yet.
 
 ### Database
 - PostgreSQL; schema in `apps/api/src/db/schema.sql`
-- Key enums: `offer_status` (`pending | accepted | rejected`), `order_status` (`pending | completed | cancelled`), `listing_status` (`active | reserved | sold | inactive`)
+- Key enums: `offer_status` (`pending | accepted | rejected | cancelled`), `order_status` (`pending | completed | cancelled`), `listing_status` (`active | reserved | sold | inactive`)
 - Offers table has a partial unique index `idx_offers_one_accepted` (only one accepted offer per listing)
 - Orders table has a partial unique index `idx_orders_one_pending` (only one pending order per listing)
 - All tables have `set_updated_at()` triggers
+- Migrations: `001_initial_schema.sql`, `002_offer_status_cancelled.sql`
 
 ### Phase status
 - Phase 1–3 complete: auth, onboarding, listings CRUD, image upload (S3 presigned URLs), marketplace feed with filters
-- Phase 4 in progress: offer workflow (`/offers` route stubbed in `app.ts`)
-- Phase 4+ planned: orders, messages
+- Phase 4 complete: offer workflow — full CRUD on `/offers`; endpoints: `POST /offers`, `POST /offers/buy-now`, `GET /offers/my`, `GET /offers/:id`, `PATCH /offers/:id/accept|reject|cancel`; accepting an offer auto-rejects other pending offers, reserves the listing, and creates a pending order; frontend pages at `/offers/[id]`, `/my-offers`, `/inbox`
+- Phase 5 planned: orders, messages
