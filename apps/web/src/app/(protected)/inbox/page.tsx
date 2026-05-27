@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useAuthStore } from '@/store/auth.store'
 import { getMyOffers } from '@/services/offers.service'
 import { OfferStatusBadge } from '@/components/offers/OfferStatusBadge'
 import type { Offer } from '@everafter/types'
@@ -74,9 +73,7 @@ function OffersList({ role }: { role: Tab }) {
 }
 
 export default function InboxPage() {
-  const { user } = useAuthStore()
-  const isSeller = user?.role === 'seller' || user?.role === 'both'
-  const [activeTab, setActiveTab] = useState<Tab>(isSeller ? 'seller' : 'buyer')
+  const [activeTab, setActiveTab] = useState<Tab>('buyer')
 
   return (
     <>
@@ -85,23 +82,21 @@ export default function InboxPage() {
       </header>
 
       <div className="mx-auto max-w-lg px-4 py-4">
-        {isSeller && (
-          <div className="mb-4 flex rounded-lg border border-taupe-300 bg-white p-1">
-            {(['seller', 'buyer'] as Tab[]).map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 rounded-md py-1.5 text-sm font-medium transition-colors ${
-                  activeTab === tab
-                    ? 'bg-sage-500 text-white'
-                    : 'text-stone-500 hover:text-stone-700'
-                }`}
-              >
-                {tab === 'seller' ? 'Received' : 'Sent'}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="mb-4 flex rounded-lg border border-taupe-300 bg-white p-1">
+          {(['buyer', 'seller'] as Tab[]).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 rounded-md py-1.5 text-sm font-medium transition-colors ${
+                activeTab === tab
+                  ? 'bg-sage-500 text-white'
+                  : 'text-stone-500 hover:text-stone-700'
+              }`}
+            >
+              {tab === 'buyer' ? 'Sent' : 'Received'}
+            </button>
+          ))}
+        </div>
 
         <OffersList role={activeTab} />
       </div>

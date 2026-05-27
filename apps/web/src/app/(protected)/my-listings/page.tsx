@@ -5,7 +5,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { ListingCard } from '@/components/listings/ListingCard'
 import { getMyListings, deleteListing } from '@/services/listings.service'
-import { useAuthStore } from '@/store/auth.store'
 
 const STATUS_LABEL: Record<string, string> = {
   active:   'Active',
@@ -21,17 +20,13 @@ const STATUS_COLOR: Record<string, string> = {
 }
 
 function MyListingsContent() {
-  const { user } = useAuthStore()
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  const isSeller = user?.role === 'seller' || user?.role === 'both'
-
   const { data, isLoading } = useQuery({
     queryKey: ['my-listings', page],
     queryFn: () => getMyListings(page),
-    enabled: isSeller,
   })
 
   async function handleDelete(id: string) {
@@ -46,15 +41,6 @@ function MyListingsContent() {
     } finally {
       setDeletingId(null)
     }
-  }
-
-  if (!isSeller) {
-    return (
-      <div className="py-24 text-center">
-        <p className="text-stone-500">Only sellers have listings.</p>
-        <Link href="/home" className="btn-ghost mt-4 text-sm">Browse the marketplace</Link>
-      </div>
-    )
   }
 
   return (

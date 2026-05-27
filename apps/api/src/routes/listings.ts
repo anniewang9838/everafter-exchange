@@ -176,11 +176,6 @@ router.get('/my', authenticate, async (req: Request, res: Response) => {
 // ── POST /listings ────────────────────────────────────────────────────────────
 
 router.post('/', authenticate, validate(createListingSchema), async (req: Request, res: Response) => {
-  if (!['seller', 'both'].includes(req.user!.role)) {
-    res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only sellers can create listings' } })
-    return
-  }
-
   const { title, description, price, originalRetailPrice, condition, category, venueStyle, imageUrls } = req.body
   const client = await pool.connect()
 

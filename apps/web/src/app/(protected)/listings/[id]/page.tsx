@@ -39,7 +39,9 @@ function DetailPage() {
     queryFn: () => getMyOffers('buyer', 1, 50),
     enabled: !!user && listing?.sellerId !== user.id,
   })
-  const myOfferOnListing = myOffersData?.items.find(o => o.listingId === id)
+  const myOfferOnListing = myOffersData?.items.find(
+    o => o.listingId === id && (o.status === 'pending' || o.status === 'accepted'),
+  )
 
   const buyNowMutation = useMutation({
     mutationFn: () => buyNow(id),
