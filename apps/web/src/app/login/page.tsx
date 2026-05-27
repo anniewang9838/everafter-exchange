@@ -6,8 +6,9 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { signIn, getMe } from '@/services/auth.service'
+import { signIn, getMe, logOut } from '@/services/auth.service'
 import { useAuthStore } from '@/store/auth.store'
+import { ApiError } from '@/lib/api/client'
 
 const schema = z.object({
   email:    z.string().email('Enter a valid email'),
@@ -27,6 +28,11 @@ export default function LoginPage() {
     setServerError(null)
     try {
       await signIn(values.email, values.password)
+    } catch {
+      setServerError('Invalid email or password')
+      return
+    }
+    try {
       const user = await getMe()
       setUser(user)
       router.replace(
@@ -34,8 +40,13 @@ export default function LoginPage() {
           ? '/home'
           : user.role === 'seller' ? '/onboarding/seller' : '/onboarding/buyer'
       )
-    } catch {
-      setServerError('Invalid email or password')
+    } catch (err) {
+      await logOut()
+      if (err instanceof ApiError && err.code === 'USER_NOT_FOUND') {
+        setServerError('Account setup was incomplete. Please sign up again.')
+      } else {
+        setServerError('Something went wrong. Please try again.')
+      }
     }
   }
 

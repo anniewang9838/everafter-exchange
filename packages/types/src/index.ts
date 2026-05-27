@@ -85,7 +85,7 @@ export interface Listing {
 
 // ── Offers ────────────────────────────────────────────────────────────────────
 
-export type OfferStatus = 'pending' | 'accepted' | 'rejected'
+export type OfferStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled'
 
 export interface Offer {
   id: string
