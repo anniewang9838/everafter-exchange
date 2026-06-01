@@ -55,6 +55,17 @@ export default function BuyerOnboardingPage() {
     }
   }
 
+  async function handleSkip() {
+    try {
+      await apiClient.patch('/auth/me/onboarding/buyer', {})
+      const updated = await apiClient.get<AuthUser>('/auth/me')
+      setUser(updated)
+      router.push('/home')
+    } catch {
+      router.push('/home')
+    }
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-beige-100 px-4 py-12">
       <div className="card w-full max-w-md p-8">
@@ -140,7 +151,7 @@ export default function BuyerOnboardingPage() {
             </button>
             <button
               type="button"
-              onClick={() => router.push('/home')}
+              onClick={handleSkip}
               className="btn-ghost w-full py-2 text-xs text-stone-400"
             >
               Skip for now

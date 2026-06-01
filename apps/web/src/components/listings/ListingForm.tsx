@@ -23,6 +23,14 @@ const schema = z.object({
     v => (v === '' || v === null || v === undefined ? null : Number(v)),
     z.number().positive().nullable(),
   ),
+}).superRefine(({ price, originalRetailPrice }, ctx) => {
+  if (originalRetailPrice !== null && price > originalRetailPrice) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Asking price must be at or below the original retail price.',
+      path: ['price'],
+    })
+  }
 })
 
 export type ListingFormValues = z.infer<typeof schema>
