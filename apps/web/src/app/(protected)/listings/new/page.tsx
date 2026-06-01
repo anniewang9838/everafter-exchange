@@ -3,21 +3,10 @@
 import { useRouter } from 'next/navigation'
 import { ListingForm, ListingFormValues } from '@/components/listings/ListingForm'
 import { createListing } from '@/services/listings.service'
-import { useAuthStore } from '@/store/auth.store'
 import Link from 'next/link'
 
 export default function NewListingPage() {
-  const { user } = useAuthStore()
   const router = useRouter()
-
-  if (user && user.role === 'buyer') {
-    return (
-      <div className="py-24 text-center">
-        <p className="text-stone-500">Only sellers can create listings.</p>
-        <Link href="/home" className="btn-ghost mt-4 text-sm">Back to browse</Link>
-      </div>
-    )
-  }
 
   async function handleSubmit(values: ListingFormValues) {
     const listing = await createListing({

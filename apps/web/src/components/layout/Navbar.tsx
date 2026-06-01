@@ -15,8 +15,6 @@ export function Navbar() {
     router.push('/')
   }
 
-  const isSeller = user?.role === 'seller' || user?.role === 'both'
-
   return (
     <nav className="sticky top-0 z-10 border-b border-taupe-300 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -28,16 +26,12 @@ export function Navbar() {
           <Link href="/home" className="text-sm text-stone-500 hover:text-stone-800 transition-colors">
             Browse
           </Link>
-          {isSeller && (
-            <>
-              <Link href="/my-listings" className="text-sm text-stone-500 hover:text-stone-800 transition-colors">
-                My Listings
-              </Link>
-              <Link href="/listings/new" className="btn-primary text-sm">
-                + New Listing
-              </Link>
-            </>
-          )}
+          <Link href="/my-listings" className="text-sm text-stone-500 hover:text-stone-800 transition-colors">
+            My Listings
+          </Link>
+          <Link href="/listings/new" className="btn-primary text-sm">
+            + New Listing
+          </Link>
           <div className="flex items-center gap-3 border-l border-taupe-300 pl-5">
             <span className="text-sm text-stone-500">@{user?.username}</span>
             <button

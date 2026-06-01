@@ -30,9 +30,20 @@ export default function SellerOnboardingPage() {
       await apiClient.patch('/auth/me/onboarding/seller', values)
       const updated = await apiClient.get<AuthUser>('/auth/me')
       setUser(updated)
-      router.push('/sell/listings')
+      router.push('/home')
     } catch (err) {
       setServerError(err instanceof Error ? err.message : 'Something went wrong')
+    }
+  }
+
+  async function handleSkip() {
+    try {
+      await apiClient.patch('/auth/me/onboarding/seller', {})
+      const updated = await apiClient.get<AuthUser>('/auth/me')
+      setUser(updated)
+      router.push('/home')
+    } catch {
+      router.push('/home')
     }
   }
 
@@ -69,7 +80,7 @@ export default function SellerOnboardingPage() {
             <button type="submit" disabled={isSubmitting} className="btn-primary w-full py-3">
               {isSubmitting ? 'Saving…' : 'Complete setup'}
             </button>
-            <button type="button" onClick={() => router.push('/sell/listings')} className="btn-ghost w-full py-2 text-xs text-stone-400">
+            <button type="button" onClick={handleSkip} className="btn-ghost w-full py-2 text-xs text-stone-400">
               Skip for now
             </button>
           </div>
