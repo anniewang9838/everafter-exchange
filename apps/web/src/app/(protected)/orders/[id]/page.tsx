@@ -42,6 +42,7 @@ function OrderDetail() {
       queryClient.setQueryData(['order', id], updated)
       queryClient.invalidateQueries({ queryKey: ['orders'] })
       queryClient.invalidateQueries({ queryKey: ['offers'] })
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
   })
 

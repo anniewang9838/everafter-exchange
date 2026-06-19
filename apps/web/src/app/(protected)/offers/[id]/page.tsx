@@ -24,6 +24,7 @@ function OfferDetail() {
       queryClient.invalidateQueries({ queryKey: ['offer', id] })
       queryClient.invalidateQueries({ queryKey: ['listing', updated.listingId] })
       queryClient.invalidateQueries({ queryKey: ['offers'] })
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
   })
 

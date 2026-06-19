@@ -60,4 +60,5 @@ There are no automated tests yet.
 ### Phase status
 - Phase 1–3 complete: auth, onboarding, listings CRUD, image upload (S3 presigned URLs), marketplace feed with filters
 - Phase 4 complete: offer workflow — full CRUD on `/offers`; endpoints: `POST /offers`, `POST /offers/buy-now`, `GET /offers/my`, `GET /offers/:id`, `PATCH /offers/:id/accept|reject|cancel`; accepting an offer auto-rejects other pending offers, reserves the listing, and creates a pending order; frontend pages at `/offers/[id]`, `/my-offers`, `/inbox`
-- Phase 5 planned: orders, messages
+- Phase 5 complete: order workflow — endpoints: `GET /orders/my`, `GET /orders/:id`, `PATCH /orders/:id/confirm`, `PATCH /orders/:id/cancel`; dual-confirm handoff (both parties must confirm → status `completed`, listing `sold`); cancel unwinds order + listing + offer atomically; frontend pages at `/orders/[id]`, `/my-orders`; `OrderStatusBadge` component
+- Phase 6 planned: messaging
