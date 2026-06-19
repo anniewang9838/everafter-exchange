@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth.store'
 import { logOut } from '@/services/auth.service'
@@ -26,6 +27,11 @@ export default function ProfilePage() {
           <p className="text-xs text-stone-400 mt-0.5">@{user?.username}</p>
           <p className="text-xs text-stone-400 mt-0.5">{user?.email}</p>
         </div>
+
+        <Link href="/my-orders" className="card flex items-center justify-between p-4 hover:bg-beige-100 transition-colors">
+          <span className="text-sm font-medium text-stone-700">My Orders</span>
+          <span className="text-stone-300">→</span>
+        </Link>
 
         <button
           onClick={handleLogout}

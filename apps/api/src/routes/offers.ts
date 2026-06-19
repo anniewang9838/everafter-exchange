@@ -35,6 +35,7 @@ const OFFER_SELECT = `
     o.status,
     o.created_at,
     o.updated_at,
+    ord.id         AS order_id,
     l.title        AS listing_title,
     l.price        AS listing_price,
     COALESCE(
@@ -47,9 +48,10 @@ const OFFER_SELECT = `
     su.username    AS seller_username,
     su.name        AS seller_name
   FROM offers o
-  JOIN listings l ON l.id = o.listing_id
-  JOIN users    bu ON bu.id = o.buyer_id
-  JOIN users    su ON su.id = o.seller_id
+  JOIN listings l   ON l.id   = o.listing_id
+  JOIN users    bu  ON bu.id  = o.buyer_id
+  JOIN users    su  ON su.id  = o.seller_id
+  LEFT JOIN orders ord ON ord.offer_id = o.id
 `
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,6 +63,7 @@ function formatOffer(row: Record<string, any>) {
     sellerId:  row.seller_id,
     price:     parseFloat(row.price),
     status:    row.status,
+    orderId:   row.order_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     listing: {

@@ -94,6 +94,7 @@ export interface Offer {
   sellerId: string
   price: number
   status: OfferStatus
+  orderId?: string | null
   createdAt: string
   updatedAt: string
   listing?: Pick<Listing, 'id' | 'title' | 'price' | 'images'>

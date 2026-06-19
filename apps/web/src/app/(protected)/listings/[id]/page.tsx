@@ -48,6 +48,7 @@ function DetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listing', id] })
       queryClient.invalidateQueries({ queryKey: ['offers'] })
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
   })
 

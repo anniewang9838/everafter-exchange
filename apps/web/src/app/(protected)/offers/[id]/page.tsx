@@ -24,6 +24,7 @@ function OfferDetail() {
       queryClient.invalidateQueries({ queryKey: ['offer', id] })
       queryClient.invalidateQueries({ queryKey: ['listing', updated.listingId] })
       queryClient.invalidateQueries({ queryKey: ['offers'] })
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
   })
 
@@ -153,11 +154,17 @@ function OfferDetail() {
           <p className="text-center text-sm text-red-500">Something went wrong. Please try again.</p>
         )}
 
-        {offer.status === 'accepted' && (
-          <div className="rounded-xl border border-sage-200 bg-sage-50 p-4 text-center">
-            <p className="font-medium text-sage-700">Offer accepted!</p>
-            <p className="mt-1 text-sm text-sage-600">Coordinate with {isSeller ? `@${offer.buyer?.username}` : `@${offer.seller?.username}`} to arrange handoff.</p>
-          </div>
+        {offer.status === 'accepted' && offer.orderId && (
+          <Link
+            href={`/orders/${offer.orderId}`}
+            className="flex items-center justify-between rounded-xl border border-sage-200 bg-sage-50 p-4 hover:bg-sage-100 transition-colors"
+          >
+            <div>
+              <p className="font-medium text-sage-700">Offer accepted!</p>
+              <p className="mt-0.5 text-sm text-sage-600">View order details and confirm handoff.</p>
+            </div>
+            <span className="text-sage-500">→</span>
+          </Link>
         )}
       </div>
     </>

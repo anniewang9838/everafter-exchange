@@ -4,6 +4,7 @@ import cors from 'cors'
 import authRouter from './routes/auth'
 import listingsRouter from './routes/listings'
 import offersRouter from './routes/offers'
+import ordersRouter from './routes/orders'
 
 const app = express()
 const PORT = process.env.PORT ?? 4000
@@ -30,8 +31,8 @@ app.get('/health', (_req, res) => {
 app.use('/auth',     authRouter)
 app.use('/listings', listingsRouter)
 app.use('/offers',   offersRouter)
-// app.use('/orders',   ordersRouter)   — Phase 4
-// app.use('/messages', messagesRouter) — Phase 4
+app.use('/orders',   ordersRouter)
+// app.use('/messages', messagesRouter) — Phase 6
 
 app.use((_req, res) => {
   res.status(404).json({
